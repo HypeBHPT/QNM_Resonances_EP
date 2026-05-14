@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --job-name=EaF_debug     # shows up in the output of squeue
+#SBATCH --time=24:00:00          # specify the requested wall-time
+#SBATCH --partition=astro3_long # specify the partition to run on
+#SBATCH --ntasks=1               # number of tasks
+#SBATCH --cpus-per-task=64        # number of OpenMP threads per MPI rank
+#SBATCH --threads-per-core=1     # number of threads active per CPU core (=1: Hyperthreading off)
+# Load Mathematica and setup port forwarding
+
+hostname
+
+ssh astro01.hpc.ku.dk -L16286:mathlm.nbi.dk:16286 -L16287:mathlm.nbi.dk:16287 -Nf
+
+# Execute the code
+
+wolframscript 241010_ParallelRunNotebooks_ParSpaceArray.wls
+
+# Make sure that the ssh tunnel is killed
+
+pkill -fu $USER astro01
